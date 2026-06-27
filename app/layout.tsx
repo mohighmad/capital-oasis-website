@@ -10,7 +10,7 @@ const arabicDescription =
 const englishDescription =
   "Capital Oasis provides manufacturing and supply solutions for doors and furniture, commercial shop decorations, exhibition decor, and different event setups in Riyadh, Saudi Arabia.";
 
-const socialImage = assets.logo.src;
+const socialImage = assets.logo;
 
 const inter = Inter({
   variable: "--font-inter",
@@ -98,7 +98,7 @@ export default function RootLayout({
     name: "Capital Oasis Woodworking Company",
     alternateName: "كابيتال واسي",
     url: siteUrl,
-    logo: `${siteUrl}${assets.logo.src}`,
+    logo: `${siteUrl}${assets.logo}`,
     image: `${siteUrl}${assets.hero}`,
     description: englishDescription,
     telephone: "+966549971514",

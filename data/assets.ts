@@ -1,7 +1,6 @@
-import logoDark from "@/LOGO/processed-transparent/production-clean/capital-oasis-logo-dark-clean-tight-2x.png";
-import logoLight from "@/LOGO/processed-transparent/production-clean/capital-oasis-logo-light-clean-tight-2x.png";
-
 const base = "/images/capital-oasis";
+const logoDark = `${base}/logo/capital-oasis-logo-dark-clean-tight-2x.png`;
+const logoLight = `${base}/logo/capital-oasis-logo-light-clean-tight-2x.png`;
 
 export const assets = {
   logo: logoDark,
