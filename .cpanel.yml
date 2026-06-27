@@ -7,6 +7,9 @@ deployment:
     - /bin/rsync -av --delete components/ $DEPLOYPATH/components/
     - /bin/rsync -av --delete data/ $DEPLOYPATH/data/
     - /bin/rsync -av --delete public/ $DEPLOYPATH/public/
+    - /bin/mkdir -p $DEPLOYPATH/LOGO/processed-transparent/production-clean
+    - /bin/cp LOGO/processed-transparent/production-clean/capital-oasis-logo-dark-clean-tight-2x.png $DEPLOYPATH/LOGO/processed-transparent/production-clean/
+    - /bin/cp LOGO/processed-transparent/production-clean/capital-oasis-logo-light-clean-tight-2x.png $DEPLOYPATH/LOGO/processed-transparent/production-clean/
     - /bin/cp package.json $DEPLOYPATH/
     - /bin/cp package-lock.json $DEPLOYPATH/
     - /bin/cp next.config.ts $DEPLOYPATH/
