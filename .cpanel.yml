@@ -1,0 +1,17 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/capitalo/capital-oasis-app
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/rsync -av --delete app/ $DEPLOYPATH/app/
+    - /bin/rsync -av --delete components/ $DEPLOYPATH/components/
+    - /bin/rsync -av --delete data/ $DEPLOYPATH/data/
+    - /bin/rsync -av --delete public/ $DEPLOYPATH/public/
+    - /bin/cp package.json $DEPLOYPATH/
+    - /bin/cp package-lock.json $DEPLOYPATH/
+    - /bin/cp next.config.ts $DEPLOYPATH/
+    - /bin/cp postcss.config.mjs $DEPLOYPATH/
+    - /bin/cp eslint.config.mjs $DEPLOYPATH/
+    - /bin/cp tsconfig.json $DEPLOYPATH/
+    - /bin/cp server.js $DEPLOYPATH/
+    - /bin/cp README.md $DEPLOYPATH/ || true
