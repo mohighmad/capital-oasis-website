@@ -1,0 +1,41 @@
+Capital Oasis Original Corporate Theme
+File: capital-oasis-original-corporate-theme.wav
+Source: Generated locally for the Capital Oasis project using original synthesized tones.
+License/usage: Original project asset. No vocals, no copyrighted samples, and no third-party music source used.
+Intended use: Safe corporate background music for later website/video processing.
+
+Source music folder checked:
+C:\New folder (2)\ابوراكان شغل جديد\مجلد جديد\موسيقي
+
+Result:
+No suitable client-provided music files were found during this pass, so the local generated instrumental fallback is prepared for future video processing.
+
+------------------------------------------------------------
+Capital Oasis Cinematic Drive (energetic corporate track)
+File: capital-oasis-cinematic-drive.wav
+Source: Generated locally for the Capital Oasis project (Python/NumPy synthesis: drums, bass, chord stabs, arpeggio).
+Style: Energetic corporate cinematic, uplifting (Am-F-C-G), 124 BPM.
+Vocals: None (instrumental only).
+License/usage: Original project asset. No copyrighted samples, no third-party/commercial music source. Commercially safe for Capital Oasis use.
+Replaces the earlier softer theme as the primary music for website videos.
+
+============================================================
+PER-VIDEO MUSIC SET (7 distinct locally-generated instrumental tracks)
+Generated locally for Capital Oasis (Python/NumPy synthesis). All instrumental, no vocals,
+no copyrighted samples, no third-party/commercial source. Commercially safe for Capital Oasis use.
+------------------------------------------------------------
+1. exhibition-booths-elegant-corporate.wav  (120 BPM, C major, four-on-floor + bright arp)
+   -> used by: event-exhibitions-booths.mp4  (premium, elegant, confident, corporate, energetic)
+2. event-halls-ceremonial-uplift.wav        (92 BPM, D major, soft perc + bell arpeggio + pad)
+   -> used by: event-halls-ceremonies.mp4  (ceremonial, elegant, uplifting, success)
+3. team-leadership-heroic-drive.wav         (110 BPM, E minor, rock kick/snare + toms + brass stabs)
+   -> used by: team-film-01.mp4  (leadership, engineering power, determination)
+4. doors-installed-calm-luxury.wav          (100 BPM, F major, minimal kick + warm pad + gentle pluck)
+   -> used by: pw-doors-installed.mp4  (premium finishing, calm luxury with forward movement)
+5. doors-manufacturing-workshop-action.wav  (128 BPM, A minor, busy four + metallic perc + fast arp)
+   -> used by: pw-doors-manufacturing.mp4  (workshop, action, production, craftsmanship)
+6. commercial-restaurant-hospitality-lively.wav (112 BPM, C major7, four + claps + funky offbeat stabs)
+   -> used by: pw-commercial-restaurant.mp4  (hospitality, stylish, lively, premium)
+7. commercial-shops-retail-modern.wav       (122 BPM, G major, sidechained pad + bright arp)
+   -> used by: pw-commercial-shops.mp4  (retail, branding, business growth, modern)
+All: generated locally / no copyright / no vocals / commercially safe.
