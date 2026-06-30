@@ -8,6 +8,7 @@ import {
   type ProjectVideo,
   type VideoCategory,
 } from "@/data/videos";
+import { assets } from "@/data/assets";
 import { useLanguage } from "./LanguageProvider";
 import { Reveal } from "./Reveal";
 import { SectionTitle } from "./SectionTitle";
@@ -21,7 +22,7 @@ const showcaseTabs: { id: ShowcaseCategory; label: { ar: string; en: string } }[
   { id: "commercial", label: { ar: "الأعمال التجارية", en: "Commercial Works" } },
 ];
 
-const brandBadge = "/images/capital-oasis/logo/capital-oasis-logo-main.webp";
+const brandBadge = assets.logoDark;
 
 function VideoThumb({
   video,

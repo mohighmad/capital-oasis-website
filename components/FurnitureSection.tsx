@@ -5,6 +5,9 @@ import { Check } from "lucide-react";
 import { assets } from "@/data/assets";
 import type { Bilingual } from "@/data/content";
 import { useLanguage } from "./LanguageProvider";
+import { ImageLightboxTrigger } from "./media/ImageLightboxTrigger";
+import { ImageModal } from "./media/ImageModal";
+import { useImageLightbox } from "./media/useImageLightbox";
 
 type FurnitureService = {
   title: Bilingual;
@@ -103,6 +106,19 @@ export function FurnitureSection() {
       },
     },
   ];
+  const furnitureLightboxItems = featuredWork.map((service, index) => ({
+    id: `furniture-${index + 1}`,
+    src: service.image,
+    alt: t(service.alt),
+    title: t(service.title),
+    caption: t(service.description),
+    groupId: "furniture",
+    groupLabel: t({
+      en: "Furniture & Hotel Furniture",
+      ar: "الأثاث السكني والفندقي",
+    }),
+  }));
+  const furnitureLightbox = useImageLightbox(furnitureLightboxItems);
 
   return (
     <section id="furniture" className="section-pad surface-soft bg-warm-beige">
@@ -141,10 +157,17 @@ export function FurnitureSection() {
                   {t(featuredWork[0].title)}
                 </h3>
               </figcaption>
+              <ImageLightboxTrigger
+                label={t({
+                  en: `View ${featuredWork[0].title.en}`,
+                  ar: `عرض ${featuredWork[0].title.ar}`,
+                })}
+                onOpen={(trigger) => furnitureLightbox.openAtIndex(0, trigger)}
+              />
             </figure>
 
             <div className="order-3 grid gap-4 sm:grid-cols-2 lg:order-3">
-              {featuredWork.slice(1).map((service) => (
+              {featuredWork.slice(1).map((service, index) => (
                 <figure
                   key={service.title.en}
                   className="group relative aspect-[4/3] overflow-hidden rounded-[1.35rem] border border-forest/10 bg-deep-green shadow-[0_14px_38px_rgba(11,59,53,.12)]"
@@ -162,6 +185,15 @@ export function FurnitureSection() {
                       {t(service.title)}
                     </h3>
                   </figcaption>
+                  <ImageLightboxTrigger
+                    label={t({
+                      en: `View ${service.title.en}`,
+                      ar: `عرض ${service.title.ar}`,
+                    })}
+                    onOpen={(trigger) =>
+                      furnitureLightbox.openAtIndex(index + 1, trigger)
+                    }
+                  />
                 </figure>
               ))}
             </div>
@@ -188,6 +220,16 @@ export function FurnitureSection() {
             </div>
           </div>
         </div>
+
+        <ImageModal
+          items={furnitureLightboxItems}
+          activeIndex={furnitureLightbox.activeIndex}
+          canGoNext={furnitureLightbox.canGoNext}
+          canGoPrevious={furnitureLightbox.canGoPrevious}
+          onClose={furnitureLightbox.close}
+          onNext={furnitureLightbox.goToNext}
+          onPrevious={furnitureLightbox.goToPrevious}
+        />
       </div>
     </section>
   );

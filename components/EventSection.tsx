@@ -14,6 +14,9 @@ import {
 import { assets } from "@/data/assets";
 import { company } from "@/data/content";
 import { useLanguage } from "./LanguageProvider";
+import { ImageLightboxTrigger } from "./media/ImageLightboxTrigger";
+import { ImageModal } from "./media/ImageModal";
+import { useImageLightbox } from "./media/useImageLightbox";
 
 const eventServices = [
   { icon: PartyPopper, en: "Exhibition and event decoration", ar: "ديكورات معارض وفعاليات" },
@@ -51,6 +54,18 @@ const heroImages = [
 
 export function EventSection() {
   const { t } = useLanguage();
+  const eventLightboxItems = heroImages.map((item, index) => ({
+    id: `events-${index + 1}`,
+    src: item.image,
+    alt: t(item.alt),
+    caption: t(item.alt),
+    groupId: "events",
+    groupLabel: t({
+      en: "Exhibition Decor & Events",
+      ar: "ديكورات معارض وفعاليات",
+    }),
+  }));
+  const eventLightbox = useImageLightbox(eventLightboxItems);
 
   return (
     <section id="events" className="section-pad surface-soft bg-warm-beige">
@@ -94,7 +109,9 @@ export function EventSection() {
                   <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-deep-green/8 text-gold">
                     <Icon size={20} aria-hidden="true" />
                   </span>
-                  <span className="text-sm leading-6 font-bold text-forest">{t({ en, ar })}</span>
+                  <span className="text-sm leading-6 font-bold text-forest">
+                    {t({ en, ar })}
+                  </span>
                 </div>
               ))}
             </div>
@@ -112,12 +129,22 @@ export function EventSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-deep-green/62 via-deep-green/8 to-transparent" />
               <figcaption className="absolute inset-x-0 bottom-0 p-5">
                 <p className="text-sm font-bold text-gold">
-                  {t({ en: "Real exhibition decor and event work", ar: "من أعمال ديكورات معارض وفعاليات" })}
+                  {t({
+                    en: "Real exhibition decor and event work",
+                    ar: "من أعمال ديكورات معارض وفعاليات",
+                  })}
                 </p>
               </figcaption>
+              <ImageLightboxTrigger
+                label={t({
+                  en: "View event image 1",
+                  ar: "عرض صورة الفعاليات 1",
+                })}
+                onOpen={(trigger) => eventLightbox.openAtIndex(0, trigger)}
+              />
             </figure>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-              {heroImages.slice(1).map((item) => (
+              {heroImages.slice(1).map((item, index) => (
                 <figure
                   key={item.image}
                   className="group relative aspect-[4/3] overflow-hidden rounded-[1.25rem] border border-forest/12 bg-deep-green shadow-[0_14px_36px_rgba(11,59,53,.11)]"
@@ -130,11 +157,30 @@ export function EventSection() {
                     className="object-cover object-center transition duration-700 group-hover:scale-[1.035]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#06231f]/42 via-transparent to-transparent" />
+                  <ImageLightboxTrigger
+                    label={t({
+                      en: `View event image ${index + 2}`,
+                      ar: `عرض صورة الفعاليات ${index + 2}`,
+                    })}
+                    onOpen={(trigger) =>
+                      eventLightbox.openAtIndex(index + 1, trigger)
+                    }
+                  />
                 </figure>
               ))}
             </div>
           </div>
         </div>
+
+        <ImageModal
+          items={eventLightboxItems}
+          activeIndex={eventLightbox.activeIndex}
+          canGoNext={eventLightbox.canGoNext}
+          canGoPrevious={eventLightbox.canGoPrevious}
+          onClose={eventLightbox.close}
+          onNext={eventLightbox.goToNext}
+          onPrevious={eventLightbox.goToPrevious}
+        />
       </div>
     </section>
   );

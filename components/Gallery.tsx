@@ -10,6 +10,9 @@ import { nonPricedAds } from "@/data/nonPricedAds";
 import { portfolio } from "@/data/portfolio";
 import { pricedOffers } from "@/data/pricedOffers";
 import { useLanguage } from "./LanguageProvider";
+import { ImageLightboxTrigger } from "./media/ImageLightboxTrigger";
+import { ImageModal } from "./media/ImageModal";
+import { useImageLightbox } from "./media/useImageLightbox";
 import { Reveal } from "./Reveal";
 import { SectionTitle } from "./SectionTitle";
 
@@ -180,6 +183,16 @@ export function Gallery() {
   }
 
   const displayedItems = visibleItems.slice(0, visibleLimit);
+  const galleryLightboxItems = displayedItems.map((item) => ({
+    id: item.id,
+    src: item.src,
+    alt: t({ ar: item.altAr, en: item.altEn }),
+    title: t({ ar: item.titleAr, en: item.titleEn }),
+    caption: t({ ar: item.categoryAr, en: item.categoryEn }),
+    groupId: `gallery-${activeTab}-${activeCategory}`,
+    groupLabel: t(activeConfig.title),
+  }));
+  const galleryLightbox = useImageLightbox(galleryLightboxItems);
   const hasMoreItems = visibleItems.length > displayedItems.length;
   const canToggleBatch = visibleItems.length > INITIAL_VISIBLE_ITEMS;
   const batchButtonLabel = t(
@@ -308,6 +321,18 @@ export function Gallery() {
                       {t({ ar: item.titleAr, en: item.titleEn })}
                     </h3>
                   </figcaption>
+                  <ImageLightboxTrigger
+                    label={t({
+                      ar: `عرض ${item.titleAr}`,
+                      en: `View ${item.titleEn}`,
+                    })}
+                    onOpen={(trigger) => {
+                      const index = displayedItems.findIndex(
+                        (displayedItem) => displayedItem.id === item.id,
+                      );
+                      galleryLightbox.openAtIndex(index, trigger);
+                    }}
+                  />
                 </figure>
               );
             })}
@@ -325,6 +350,16 @@ export function Gallery() {
             </button>
           </div>
         ) : null}
+
+        <ImageModal
+          items={galleryLightboxItems}
+          activeIndex={galleryLightbox.activeIndex}
+          canGoNext={galleryLightbox.canGoNext}
+          canGoPrevious={galleryLightbox.canGoPrevious}
+          onClose={galleryLightbox.close}
+          onNext={galleryLightbox.goToNext}
+          onPrevious={galleryLightbox.goToPrevious}
+        />
       </div>
     </section>
   );

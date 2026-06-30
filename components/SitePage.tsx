@@ -22,6 +22,7 @@ import { ScrollToTop } from "./ScrollToTop";
 import { TeamSection } from "./TeamSection";
 import { WhatsAppButton } from "./WhatsAppButton";
 import { WhyChooseUs } from "./WhyChooseUs";
+import { CategoryGateway } from "./sections/CategoryGateway";
 
 export function SitePage() {
   return (
@@ -29,6 +30,7 @@ export function SitePage() {
       <Header />
       <main id="main-content" tabIndex={-1}>
         <Hero />
+        <CategoryGateway />
         <OurCategories />
         <FeaturedSolutions />
         <Collections />

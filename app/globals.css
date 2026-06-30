@@ -5,6 +5,30 @@
 @source "../data";
 
 :root {
+  --color-brand-deep: #0c3a3a;
+  --color-brand-deep-hover: #0a3333;
+  --color-brand-gold: #d4a674;
+  --color-brand-gold-hover: #e0b685;
+  --color-brand-ivory: #efefef;
+  --color-brand-neutral: #d9c6ae;
+  --color-bg-body: #efefef;
+  --color-bg-card: rgba(255, 255, 255, 0.78);
+  --color-bg-dark-section: #0c3a3a;
+  --color-text-primary: #12302f;
+  --color-text-muted: rgba(18, 48, 47, 0.68);
+  --color-border-subtle: rgba(12, 58, 58, 0.12);
+  --color-overlay-dark: rgba(6, 24, 24, 0.72);
+  --color-overlay-modal: rgba(4, 16, 16, 0.88);
+  --layout-max-width: 1240px;
+  --space-section-desktop: 96px;
+  --space-section-tablet: 80px;
+  --space-section-mobile: 64px;
+  --space-card: 24px;
+  --space-grid: 24px;
+  --space-hero-top: 96px;
+  --space-hero-bottom: 72px;
+  --space-modal: 24px;
+  --radius-button: 999px;
   --deep-green: #0b3b35;
   --green-deep2: #093430;
   --forest-night: #06231f;
@@ -27,7 +51,19 @@
   --hairline-gold: rgba(226, 201, 139, 0.5);
   --shadow-soft: 0 16px 42px rgba(11, 59, 53, 0.085);
   --shadow-card: 0 22px 58px rgba(6, 35, 31, 0.14);
+  --shadow-card-soft: 0 14px 38px rgba(12, 58, 58, 0.09);
+  --shadow-card-hover: 0 22px 58px rgba(6, 24, 24, 0.16);
+  --shadow-modal: 0 30px 90px rgba(0, 0, 0, 0.35);
+  --border-gold-hairline: 1px solid rgba(212, 166, 116, 0.55);
+  --border-dark-soft: 1px solid rgba(12, 58, 58, 0.12);
+  --border-light-soft: 1px solid rgba(255, 255, 255, 0.18);
   --radius-card: 1.5rem;
+  --radius-media: 28px;
+  --radius-modal: 28px;
+  --radius-pill: 999px;
+  --font-brand-en-display: "Archivo Expanded", var(--font-inter), Arial, sans-serif;
+  --font-brand-ar-display: var(--font-tajawal), "Noto Sans Arabic", "IBM Plex Sans Arabic", Arial, sans-serif;
+  --font-brand-body: var(--font-inter), "Segoe UI", Arial, sans-serif;
   /* Shared premium motion tokens (calm, consistent) */
   --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-reveal: 620ms;
@@ -85,29 +121,29 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 84px;
-  background: var(--ivory);
+  background: var(--color-bg-body);
 }
 
 html[dir="ltr"],
 html[dir="ltr"] body {
   margin: 0;
   overflow-x: hidden;
-  background: var(--ivory);
+  background: var(--color-bg-body);
   color: var(--charcoal);
-  font-family: var(--font-inter), "Segoe UI", Arial, sans-serif !important;
+  font-family: var(--font-brand-body) !important;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
 
 html[dir="rtl"],
 html[dir="rtl"] body {
-  font-family: var(--font-tajawal), Tahoma, Arial, sans-serif !important;
+  font-family: var(--font-brand-ar-display), Tahoma, Arial, sans-serif !important;
 }
 
 body {
   margin: 0;
   overflow-x: hidden;
-  background: var(--ivory);
+  background: var(--color-bg-body);
   color: var(--charcoal);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -156,12 +192,16 @@ a {
 }
 
 .shell {
-  width: min(calc(100% - clamp(2rem, 6vw, 6rem)), 1240px);
+  width: min(calc(100% - clamp(2rem, 6vw, 6rem)), var(--layout-max-width));
   margin-inline: auto;
 }
 
 .section-pad {
-  padding-block: clamp(5rem, 8vw, 8.5rem);
+  padding-block: clamp(
+    var(--space-section-mobile),
+    8vw,
+    var(--space-section-desktop)
+  );
 }
 
 .eyebrow {
@@ -191,6 +231,7 @@ html[dir="rtl"] .eyebrow {
 
 .display-title {
   max-width: 14ch;
+  font-family: var(--font-brand-en-display);
   font-size: clamp(2.5rem, 5.5vw, 5.25rem);
   font-weight: 600;
   line-height: 0.98;
@@ -200,9 +241,26 @@ html[dir="rtl"] .eyebrow {
 
 html[dir="rtl"] .display-title {
   max-width: 12ch;
+  font-family: var(--font-brand-ar-display);
   font-weight: 700;
   line-height: 1.16;
   letter-spacing: -0.025em;
+}
+
+.brand-display {
+  font-family: var(--font-brand-en-display);
+}
+
+html[dir="rtl"] .brand-display {
+  font-family: var(--font-brand-ar-display);
+}
+
+.brand-body {
+  font-family: var(--font-brand-body);
+}
+
+html[dir="rtl"] .brand-body {
+  font-family: var(--font-brand-ar-display);
 }
 
 html[dir="rtl"] h1,

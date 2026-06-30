@@ -5,6 +5,9 @@ import { Check, DoorOpen, ShieldCheck } from "lucide-react";
 import { doorOffer } from "@/data/content";
 import { services } from "@/data/services";
 import { useLanguage } from "./LanguageProvider";
+import { ImageLightboxTrigger } from "./media/ImageLightboxTrigger";
+import { ImageModal } from "./media/ImageModal";
+import { useImageLightbox } from "./media/useImageLightbox";
 
 const doorProjects = [
   {
@@ -33,6 +36,15 @@ const doorProjects = [
 export function DoorsSection() {
   const { t } = useLanguage();
   const doors = services[0];
+  const doorLightboxItems = doorProjects.map((project, index) => ({
+    id: `doors-${index + 1}`,
+    src: project.image,
+    alt: t(project.alt),
+    caption: t(project.alt),
+    groupId: "doors",
+    groupLabel: t({ en: "Doors", ar: "الأبواب" }),
+  }));
+  const doorLightbox = useImageLightbox(doorLightboxItems);
 
   return (
     <section id="doors" className="section-pad wood-grain bg-forest text-white">
@@ -58,8 +70,15 @@ export function DoorsSection() {
                   })}
                 </p>
               </div>
+              <ImageLightboxTrigger
+                label={t({
+                  en: "View door image 1",
+                  ar: "عرض صورة الأبواب 1",
+                })}
+                onOpen={(trigger) => doorLightbox.openAtIndex(0, trigger)}
+              />
             </div>
-            {doorProjects.slice(1).map((project) => (
+            {doorProjects.slice(1).map((project, index) => (
               <div
                 key={project.image}
                 className="card-support relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/10 bg-white/5"
@@ -70,6 +89,15 @@ export function DoorsSection() {
                   fill
                   sizes="(max-width: 1024px) 50vw, 22vw"
                   className="object-cover object-center transition duration-700 hover:scale-[1.035]"
+                />
+                <ImageLightboxTrigger
+                  label={t({
+                    en: `View door image ${index + 2}`,
+                    ar: `عرض صورة الأبواب ${index + 2}`,
+                  })}
+                  onOpen={(trigger) =>
+                    doorLightbox.openAtIndex(index + 1, trigger)
+                  }
                 />
               </div>
             ))}
@@ -123,6 +151,16 @@ export function DoorsSection() {
             <p className="mt-3 text-sm leading-7 font-semibold text-white/82">{t(doorOffer.warranty)}</p>
           </div>
         </div>
+
+        <ImageModal
+          items={doorLightboxItems}
+          activeIndex={doorLightbox.activeIndex}
+          canGoNext={doorLightbox.canGoNext}
+          canGoPrevious={doorLightbox.canGoPrevious}
+          onClose={doorLightbox.close}
+          onNext={doorLightbox.goToNext}
+          onPrevious={doorLightbox.goToPrevious}
+        />
       </div>
     </section>
   );
