@@ -58,7 +58,11 @@ The upload root contains:
 
 The workflow validates the required runtime files before connecting to cPanel. It uploads the contents of `deploy-out/` into `${CPANEL_APP_PATH}/` and never removes or recreates the app root folder itself.
 
-The rsync cleanup is limited to the app-root contents and excludes `tmp/`, `stderr.log`, and `*.log` so restart and local diagnostic files are retained.
+The rsync cleanup is limited to the app-root contents and excludes `tmp/`, `stderr.log`, and `*.log` so restart and local diagnostic files are retained. Receiver-side files under `public/videos/` are protected from deletion because some large production videos remain server-only until they can be compressed, moved to Git LFS, or served from CDN/object storage. New tracked videos present in `deploy-out/public/videos/` can still upload normally.
+
+### Server-only production videos
+
+The deployment workflow protects `/public/videos/` on the cPanel receiver during rsync. This prevents large server-only videos from being deleted when they are intentionally absent from the GitHub repository. Manage those files separately for now; future options include compressing the videos, tracking them with Git LFS, or moving them to CDN/object storage.
 
 After upload, the remote step:
 

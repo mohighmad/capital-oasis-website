@@ -112,7 +112,9 @@ jobs:
             -o IdentitiesOnly=yes
             -o StrictHostKeyChecking=accept-new
           )
+          # Protect server-only production videos until they move to Git LFS/CDN or are compressed.
           rsync -az --delete \
+            --filter='P /public/videos/***' \
             --exclude='tmp/' \
             --exclude='stderr.log' \
             --exclude='*.log' \
