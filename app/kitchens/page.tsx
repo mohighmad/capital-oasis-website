@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
-import { PlaceholderRoutePage } from "@/components/sections/PlaceholderRoutePage";
-import { getSectionById } from "@/data/sections";
-
-const section = getSectionById("kitchens");
+import { KitchensRoutePage } from "@/components/sections/KitchensRoutePage";
 
 export const metadata: Metadata = {
-  title: `${section.title.en} | ${section.title.ar} | Capital Oasis`,
+  title: "Kitchens | المطابخ | Capital Oasis",
+  description:
+    "Capital Oasis kitchens page for practical kitchen systems, material and finish directions, storage planning, and premium kitchen-selection consultation.",
+  alternates: {
+    canonical: "/kitchens",
+  },
 };
 
 export default function KitchensPage() {
-  return <PlaceholderRoutePage section={section} />;
+  return <KitchensRoutePage />;
 }

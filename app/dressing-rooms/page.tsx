@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { PlaceholderRoutePage } from "@/components/sections/PlaceholderRoutePage";
-import { getSectionById } from "@/data/sections";
-
-const section = getSectionById("dressing-rooms");
+import { DressingRoomsRoutePage } from "@/components/sections/DressingRoomsRoutePage";
 
 export const metadata: Metadata = {
-  title: `${section.title.en} | ${section.title.ar} | Capital Oasis`,
+  title: "Dressing Rooms | غرف الملابس | Capital Oasis",
+  description:
+    "Premium dressing-room and wardrobe design directions by Capital Oasis, including walk-in layouts, glass wardrobes, mirrors, sliding fronts, and compact storage solutions.",
 };
 
 export default function DressingRoomsPage() {
-  return <PlaceholderRoutePage section={section} />;
+  return <DressingRoomsRoutePage />;
 }

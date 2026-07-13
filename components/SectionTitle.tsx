@@ -16,13 +16,14 @@ export function SectionTitle({
   light?: boolean;
 }) {
   const { t } = useLanguage();
-  const { ref, shown } = useReveal<HTMLDivElement>();
+  const { ref, shown, ready } = useReveal<HTMLDivElement>();
+  const visibilityClass = shown ? "is-visible" : ready ? "is-pending" : "";
 
   return (
     <div
       ref={ref}
       data-reveal
-      className={`max-w-[50rem]${shown ? " is-visible" : ""}`}
+      className={`max-w-[50rem] ${visibilityClass}`}
     >
       <p className={`eyebrow mb-5 ${light ? "text-sand" : ""}`}>{t(eyebrow)}</p>
       <h2

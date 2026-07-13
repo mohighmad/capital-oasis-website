@@ -44,6 +44,9 @@ type VideoInput = {
 
 const finalVideos = "/images/capital-oasis/project-videos/final";
 const curatedPosters = "/images/capital-oasis/project-videos/posters-curated-v6";
+const readySiteVideos = "/videos/capital-oasis/site-videos";
+const readyEventsVideos = `${readySiteVideos}/events`;
+const readyCommercialVideos = `${readySiteVideos}/commercial-shops`;
 
 function projectVideo(input: VideoInput): ProjectVideo {
   return {
@@ -71,7 +74,7 @@ export const projectVideos: ProjectVideo[] = [
   }),
   projectVideo({
     id: "event-mushaf-writing-competition",
-    src: `${finalVideos}/event-mushaf-writing-competition-final-v6.mp4`,
+    src: `${readyEventsVideos}/mushaf-writing-competition-site-ready.mp4`,
     poster: `${curatedPosters}/event-mushaf-writing-competition-poster-v6.webp`,
     category: "events",
     categoryAr: "ديكورات معارض وفعاليات",
@@ -83,7 +86,7 @@ export const projectVideos: ProjectVideo[] = [
   }),
   projectVideo({
     id: "event-princess-seetah-award",
-    src: `${finalVideos}/event-princess-seetah-award-final-v6.mp4`,
+    src: `${readyEventsVideos}/princess-seetah-award-site-ready-v2.mp4`,
     poster: `${curatedPosters}/event-princess-seetah-award-poster-v6.webp`,
     category: "events",
     categoryAr: "ديكورات معارض وفعاليات",
@@ -95,7 +98,7 @@ export const projectVideos: ProjectVideo[] = [
   }),
   projectVideo({
     id: "event-king-salman-quran-award",
-    src: `${finalVideos}/event-king-salman-quran-award-final-v6.mp4`,
+    src: `${readyEventsVideos}/king-salman-quran-competition-site-ready.mp4`,
     poster: `${curatedPosters}/event-king-salman-quran-award-poster-v6.webp`,
     category: "events",
     categoryAr: "القاعات والفعاليات",
@@ -107,20 +110,20 @@ export const projectVideos: ProjectVideo[] = [
   }),
   projectVideo({
     id: "pw-doors-installed",
-    src: `${finalVideos}/pw-doors-installed-final-v6.mp4`,
-    poster: `${curatedPosters}/pw-doors-installed-poster-v6.webp`,
+    src: "/videos/capital-oasis/site-videos/doors/doors-after-installation-approved-batch1-v1.mp4",
+    poster: "/images/capital-oasis/previous-works/videos/processed/pw-doors-installed.jpg",
     category: "doors",
     categoryAr: "أبواب خشبية",
     categoryEn: "Wooden Doors",
-    titleAr: "الأبواب المنفذة",
-    titleEn: "Installed Doors",
-    altAr: "صورة مصغرة تعرض هوية كابيتال واسي لفيلم الأبواب المنفذة",
-    altEn: "Capital Oasis branded thumbnail for the Installed Doors video",
+    titleAr: "الأبواب بعد التركيب",
+    titleEn: "Doors After Installation",
+    altAr: "صورة مصغرة تعرض فيلم الأبواب بعد التركيب",
+    altEn: "Thumbnail for the Doors After Installation video",
   }),
   projectVideo({
     id: "pw-doors-manufacturing",
-    src: `${finalVideos}/pw-doors-manufacturing-final-v6.mp4`,
-    poster: `${curatedPosters}/pw-doors-manufacturing-poster-v6.webp`,
+    src: "/videos/capital-oasis/site-videos/doors/doors-manufacturing-approved-batch1-v1.mp4",
+    poster: "/images/capital-oasis/previous-works/videos/processed/pw-doors-manufacturing.jpg",
     category: "doors",
     categoryAr: "أبواب خشبية",
     categoryEn: "Wooden Doors",
@@ -131,38 +134,38 @@ export const projectVideos: ProjectVideo[] = [
   }),
   projectVideo({
     id: "pw-commercial-restaurant",
-    src: `${finalVideos}/pw-commercial-restaurant-final-v6.mp4`,
+    src: `${readyCommercialVideos}/almasia-restaurants-site-ready.mp4`,
     poster: `${curatedPosters}/pw-commercial-restaurant-poster-v6.webp`,
     category: "commercial",
     categoryAr: "ديكورات محلات تجارية",
     categoryEn: "Commercial Decorations",
-    titleAr: "أعمال المطاعم التجارية",
-    titleEn: "Commercial Restaurant Works",
-    altAr: "صورة مصغرة تعرض هوية كابيتال واسي لفيلم أعمال المطاعم التجارية",
-    altEn: "Capital Oasis branded thumbnail for the Commercial Restaurant Works video",
+    titleAr: "مطاعم الماسيه",
+    titleEn: "Almasia Restaurants",
+    altAr: "صورة مصغرة تعرض فيلم تجهيز مطاعم الماسيه",
+    altEn: "Thumbnail for the Almasia Restaurants fit-out video",
   }),
   projectVideo({
     id: "pw-commercial-shops",
-    src: `${finalVideos}/pw-commercial-shops-final-v6.mp4`,
+    src: `${readyCommercialVideos}/aljazira-super-site-ready.mp4`,
     poster: `${curatedPosters}/pw-commercial-shops-poster-v6.webp`,
     category: "commercial",
     categoryAr: "ديكورات محلات تجارية",
     categoryEn: "Commercial Decorations",
-    titleAr: "أعمال المحلات التجارية",
-    titleEn: "Commercial Shops Works",
-    altAr: "صورة مصغرة تعرض هوية كابيتال واسي لفيلم أعمال المحلات التجارية",
-    altEn: "Capital Oasis branded thumbnail for the Commercial Shops Works video",
+    titleAr: "الجزيره سوبر ماركت",
+    titleEn: "Aljazira Super",
+    altAr: "صورة مصغرة تعرض فيلم تجهيز الجزيره سوبر ماركت",
+    altEn: "Thumbnail for the Aljazira Super fit-out video",
   }),
   projectVideo({
     id: "pw-botella-store",
-    src: `${finalVideos}/pw-botella-store-final-v6.mp4`,
+    src: `${readyCommercialVideos}/botella-gift-shop-site-ready.mp4`,
     poster: `${curatedPosters}/pw-botella-store-poster-v6.webp`,
     category: "commercial",
     categoryAr: "ديكورات محلات تجارية",
     categoryEn: "Commercial Decorations",
-    titleAr: "تنفيذ متجر بوتيلا",
-    titleEn: "Botella Store Fit-out",
-    altAr: "صورة مصغرة تعرض هوية كابيتال واسي لفيلم تنفيذ متجر بوتيلا",
-    altEn: "Capital Oasis branded thumbnail for the Botella Store Fit-out video",
+    titleAr: "فيديو محل الهدايا بوتيلا",
+    titleEn: "Botella Gift Shop Video",
+    altAr: "صورة مصغرة تعرض فيلم محل الهدايا بوتيلا",
+    altEn: "Thumbnail for the Botella Gift Shop video",
   }),
 ];

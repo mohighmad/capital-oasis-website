@@ -105,12 +105,12 @@ export const copy = {
   services: {
     eyebrow: { en: "What we do", ar: "ماذا نقدم" },
     title: {
-      en: "Professional solutions for spaces, projects, and occasions.",
-      ar: "حلول احترافية للمساحات والمشاريع والمناسبات.",
+      en: "A clear path to better spaces, projects, and occasions.",
+      ar: "مسار واضح لمساحات ومشاريع ومناسبات أفضل.",
     },
     text: {
-      en: officialScope.en,
-      ar: officialScope.ar,
+      en: "From doors and kitchens to commercial fit-outs and events, we connect the right material, detail, and delivery path to the project.",
+      ar: "من الأبواب والمطابخ إلى التجهيز التجاري والفعاليات، نربط الخامة والتفصيل ومسار التنفيذ المناسب بالمشروع.",
     },
   },
   why: {

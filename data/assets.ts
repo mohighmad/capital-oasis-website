@@ -1,9 +1,12 @@
 const base = "/images/capital-oasis";
-const logoDark = `${base}/logo/capital-oasis-logo-dark-clean-tight-2x.png`;
-const logoLight = `${base}/logo/capital-oasis-logo-light-clean-tight-2x.png`;
+// Header/footer brand mark — enhanced/upscaled from the new source logo
+// (Log/1.jpeg). Kept as a transparent PNG (see BrandLogo.tsx) since the
+// subtitle wordmark did not vectorize cleanly enough for production SVG use.
+const logoDark = `${base}/brand/capital-oasis-logo-new-enhanced.png`;
+const logoLight = `${base}/logo/capital-oasis-logo-from-design-pdf-vector-light.svg`;
 
 export const assets = {
-  logo: logoDark,
+  logo: logoLight,
   logoDark,
   logoLight,
   hero: `${base}/decor/decor-06.jpg`,

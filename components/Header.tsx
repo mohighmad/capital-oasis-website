@@ -42,60 +42,60 @@ export function Header() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 text-white transition-all duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 border-b text-white transition-all duration-300 ${
         scrolled
-          ? "bg-deep-green/98 shadow-lg shadow-black/10 backdrop-blur-xl"
-          : "bg-deep-green/55 backdrop-blur-md"
+          ? "border-gold/14 bg-[#06231F]/96 shadow-[0_18px_44px_rgba(4,26,24,0.16)] backdrop-blur-xl"
+          : "border-white/10 bg-[#06231F]/72 shadow-[0_12px_34px_rgba(4,26,24,0.08)] backdrop-blur-md"
       }`}
     >
-      <div className="shell flex h-[68px] items-center justify-between gap-4">
+      <div className="shell flex h-[112px] items-center justify-between gap-4 xl:h-[104px] xl:gap-3">
         <Link
           href="/"
-          className="group flex h-full shrink-0 items-center gap-3 py-2"
+          className="group flex h-full shrink-0 items-center gap-3 rounded-2xl py-2 xl:py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
           aria-label={t(company.name)}
         >
           <BrandLogo
             priority
             variant="dark"
-            className="block h-auto max-h-11 w-auto max-w-[132px] sm:max-h-12 sm:max-w-[148px]"
+            className="header-logo-align-fix block h-auto max-h-[72px] w-auto max-w-[264px] sm:max-h-[84px] sm:max-w-[318px] xl:max-h-[95px] xl:max-w-[358px]"
           />
         </Link>
 
         <nav
-          className="hidden items-center gap-7 xl:flex"
+          className="header-controls-optical-align hidden items-center gap-1.5 xl:flex"
           aria-label={t({ en: "Primary navigation", ar: "التنقل الرئيسي" })}
         >
           {primaryNavItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`relative whitespace-nowrap py-3 text-[13px] font-bold tracking-[0.01em] transition after:absolute after:inset-x-0 after:bottom-1 after:h-px after:origin-center after:bg-gold after:transition-transform rtl:tracking-normal ${
+              className={`relative flex items-center justify-center whitespace-nowrap rounded-full px-2.5 py-2 text-center text-[0.72rem] font-extrabold leading-tight tracking-[0.01em] transition duration-300 after:absolute after:inset-x-2.5 after:bottom-1 after:h-px after:origin-center after:bg-gold after:transition-transform rtl:tracking-normal ${
                 isActive(item.href)
-                  ? "text-white after:scale-x-100"
-                  : "text-white/80 after:scale-x-0 hover:text-white hover:after:scale-x-100"
+                  ? "bg-white/[0.075] text-gold after:scale-x-100"
+                  : "text-white/78 after:scale-x-0 hover:bg-white/[0.055] hover:text-white hover:after:scale-x-100"
               }`}
             >
-              {t(item.label)}
+              <span className="block w-full text-center">{t(item.label)}</span>
             </Link>
           ))}
         </nav>
 
-        <div className="hidden shrink-0 items-center gap-2 xl:flex">
-          <LanguageToggle compact />
+        <div className="header-controls-optical-align hidden shrink-0 items-center gap-[6px] xl:flex">
+          <LanguageToggle compact dense />
           <a
             href={company.whatsapp}
             target="_blank"
             rel="noreferrer"
-            className="btn-primary min-h-10 px-4 py-2 text-xs shadow-none"
+            className="btn-primary min-h-[30px] px-3 py-[6px] text-[0.62rem] font-extrabold shadow-none"
           >
-            <MessageCircle size={16} />
+            <MessageCircle size={12} />
             {t({ en: "WhatsApp", ar: "واتساب" })}
           </a>
         </div>
 
         <button
           type="button"
-          className="grid size-10 place-items-center rounded-xl border border-white/15 bg-white/[0.04] text-white xl:hidden"
+          className="grid size-11 place-items-center rounded-2xl border border-white/14 bg-white/[0.055] text-white shadow-[0_14px_30px_rgba(4,26,24,0.16)] transition hover:border-gold/50 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold xl:hidden"
           onClick={() => setOpen((value) => !value)}
           aria-expanded={open}
           aria-controls="mobile-navigation"
@@ -108,10 +108,10 @@ export function Header() {
       {open && (
         <div
           id="mobile-navigation"
-          className="menu-in max-h-[calc(100dvh-68px)] overflow-y-auto border-t border-white/10 bg-deep-green/98 px-4 pb-5 shadow-2xl backdrop-blur-xl xl:hidden"
+          className="menu-in max-h-[calc(100dvh-112px)] overflow-y-auto border-t border-white/10 bg-[#06231F]/98 px-4 pb-5 shadow-2xl backdrop-blur-xl xl:hidden"
         >
           <nav
-            className="shell grid grid-cols-2 gap-x-5 py-3"
+            className="shell grid grid-cols-2 gap-2 py-4"
             aria-label={t({ en: "Mobile navigation", ar: "التنقل عبر الجوال" })}
           >
             {primaryNavItems.map((item) => (
@@ -119,8 +119,10 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className={`border-b border-white/10 py-3.5 text-sm font-semibold transition ${
-                  isActive(item.href) ? "text-gold" : "text-white/88 hover:text-white"
+                className={`rounded-2xl border px-3 py-3 text-sm font-bold leading-6 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold ${
+                  isActive(item.href)
+                    ? "border-gold/28 bg-gold/10 text-gold"
+                    : "border-white/9 bg-white/[0.035] text-white/84 hover:border-white/18 hover:bg-white/[0.06] hover:text-white"
                 }`}
               >
                 {t(item.label)}
@@ -133,7 +135,7 @@ export function Header() {
               href={company.whatsapp}
               target="_blank"
               rel="noreferrer"
-              className="btn-primary min-h-10 px-4 py-2 text-xs"
+              className="btn-primary min-h-10 px-4 py-2 text-[0.78rem] font-extrabold"
             >
               <MessageCircle size={15} />
               {t({ en: "WhatsApp Us", ar: "تواصل واتساب" })}

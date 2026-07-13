@@ -4,13 +4,13 @@ import { assets } from "@/data/assets";
 const logoByVariant = {
   dark: {
     src: assets.logoDark,
-    width: 1132,
-    height: 1036,
+    width: 700,
+    height: 634,
   },
   light: {
     src: assets.logoLight,
-    width: 1258,
-    height: 1216,
+    width: 830,
+    height: 380,
   },
 } as const;
 

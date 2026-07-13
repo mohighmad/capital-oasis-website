@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { useEffect, useId, useRef, type TouchEvent } from "react";
+import { useEffect, useId, useRef, useState, type TouchEvent } from "react";
 import { useLanguage } from "../LanguageProvider";
 import type { LightboxItem } from "./useImageLightbox";
 
@@ -19,6 +20,14 @@ type ImageModalProps = {
 const SWIPE_THRESHOLD = 48;
 const SWIPE_DOMINANCE_RATIO = 1.2;
 
+type ScrollLockSnapshot = {
+  bodyOverflow: string;
+  bodyPaddingRight: string;
+  bodyOverscrollBehavior: string;
+  htmlOverflow: string;
+  htmlOverscrollBehavior: string;
+};
+
 export function ImageModal({
   activeIndex,
   canGoNext,
@@ -30,39 +39,80 @@ export function ImageModal({
 }: ImageModalProps) {
   const { language, t } = useLanguage();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const onCloseRef = useRef(onClose);
+  const onNextRef = useRef(onNext);
+  const onPreviousRef = useRef(onPrevious);
+  const scrollLockRef = useRef<ScrollLockSnapshot | null>(null);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
   const titleId = useId();
   const captionId = useId();
   const currentItem =
     activeIndex === null ? null : (items[activeIndex] ?? null);
 
   useEffect(() => {
+    onCloseRef.current = onClose;
+    onNextRef.current = onNext;
+    onPreviousRef.current = onPrevious;
+  }, [onClose, onNext, onPrevious]);
+
+  useEffect(() => {
+    setPortalRoot(document.body);
+  }, []);
+
+  useEffect(() => {
     if (!currentItem) return;
 
-    const previousBodyOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    closeButtonRef.current?.focus();
+    const html = document.documentElement;
+    const body = document.body;
+    const scrollbarWidth = window.innerWidth - html.clientWidth;
+
+    scrollLockRef.current = {
+      bodyOverflow: body.style.overflow,
+      bodyPaddingRight: body.style.paddingRight,
+      bodyOverscrollBehavior: body.style.overscrollBehavior,
+      htmlOverflow: html.style.overflow,
+      htmlOverscrollBehavior: html.style.overscrollBehavior,
+    };
+
+    html.style.overflow = "hidden";
+    html.style.overscrollBehavior = "contain";
+    body.style.overflow = "hidden";
+    body.style.overscrollBehavior = "contain";
+    if (scrollbarWidth > 0) {
+      body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    window.requestAnimationFrame(() => closeButtonRef.current?.focus());
 
     const handleKeydown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        onClose();
+        onCloseRef.current();
         return;
       }
       if (event.key === "ArrowLeft" && canGoPrevious) {
-        onPrevious();
+        onPreviousRef.current();
         return;
       }
       if (event.key === "ArrowRight" && canGoNext) {
-        onNext();
+        onNextRef.current();
       }
     };
 
     window.addEventListener("keydown", handleKeydown);
     return () => {
-      document.body.style.overflow = previousBodyOverflow;
       window.removeEventListener("keydown", handleKeydown);
+      const previous = scrollLockRef.current;
+      if (!previous) return;
+
+      body.style.overflow = previous.bodyOverflow;
+      body.style.paddingRight = previous.bodyPaddingRight;
+      body.style.overscrollBehavior = previous.bodyOverscrollBehavior;
+      html.style.overflow = previous.htmlOverflow;
+      html.style.overscrollBehavior = previous.htmlOverscrollBehavior;
+      scrollLockRef.current = null;
     };
-  }, [canGoNext, canGoPrevious, currentItem, onClose, onNext, onPrevious]);
+  }, [activeIndex, canGoNext, canGoPrevious, currentItem]);
 
   if (!currentItem || activeIndex === null) {
     return null;
@@ -102,9 +152,13 @@ export function ImageModal({
     }
   }
 
-  return (
+  if (!portalRoot) {
+    return null;
+  }
+
+  const modalMarkup = (
     <div
-      className="modal-backdrop-in fixed inset-0 z-[110] bg-[#031715]/92 p-3 backdrop-blur-md sm:p-6"
+      className="modal-backdrop-in fixed inset-0 z-[9999] flex items-center justify-center bg-[#031715]/94 p-2 backdrop-blur-md overscroll-contain sm:p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
@@ -113,8 +167,8 @@ export function ImageModal({
         if (event.target === event.currentTarget) onClose();
       }}
     >
-      <div className="modal-panel-in flex h-full min-h-0 w-full flex-col overflow-hidden rounded-[2rem] border border-gold/18 bg-[rgba(6,24,24,0.82)] shadow-[var(--shadow-modal)]">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 px-4 py-4 text-white sm:px-6">
+      <div className="modal-panel-in flex h-[92dvh] max-h-[94dvh] w-[96vw] max-w-[1440px] flex-col overflow-hidden rounded-[1.6rem] border border-gold/18 bg-[rgba(6,24,24,0.9)] shadow-[var(--shadow-modal)] sm:h-[92dvh] sm:rounded-[2rem]">
+        <div className="flex shrink-0 items-start justify-between gap-4 border-b border-white/10 px-4 py-3 text-white sm:px-6 sm:py-4">
           <div className="min-w-0">
             {currentItem.groupLabel ? (
               <p className="text-[11px] font-extrabold tracking-[0.16em] text-gold/90 uppercase rtl:tracking-normal rtl:normal-case">
@@ -148,7 +202,7 @@ export function ImageModal({
         </div>
 
         <div
-          className="relative flex min-h-0 flex-1 items-center justify-center px-3 pb-3 pt-2 sm:px-6 sm:pb-6"
+          className="relative flex min-h-0 flex-1 items-center justify-center px-2 py-2 sm:px-4 sm:py-4"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
@@ -164,13 +218,13 @@ export function ImageModal({
             </button>
           ) : null}
 
-          <div className="relative h-full w-full max-w-6xl">
+          <div className="relative h-full w-full">
             <Image
               src={currentItem.src}
               alt={currentItem.alt}
               fill
               loading="eager"
-              sizes="100vw"
+              sizes="96vw"
               className="object-contain"
             />
           </div>
@@ -191,7 +245,7 @@ export function ImageModal({
         {currentItem.caption ? (
           <div
             id={captionId}
-            className="border-t border-white/10 px-4 py-4 text-sm leading-7 text-white/78 sm:px-6"
+            className="max-h-[18dvh] shrink-0 overflow-y-auto border-t border-white/10 px-4 py-3 text-sm leading-7 text-white/78 sm:px-6 sm:py-4"
           >
             {currentItem.caption}
           </div>
@@ -199,4 +253,6 @@ export function ImageModal({
       </div>
     </div>
   );
+
+  return createPortal(modalMarkup, portalRoot);
 }

@@ -16,37 +16,93 @@ import {
 export function useReveal<T extends HTMLElement = HTMLDivElement>() {
   const ref = useRef<T>(null);
   const [shown, setShown] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    let frameId = 0;
+    let fallbackId = 0;
+    let disposed = false;
+    let observer: IntersectionObserver | null = null;
+    let handleViewportChange = () => {};
+
+    const removeViewportListeners = () => {
+      window.removeEventListener("scroll", handleViewportChange);
+      window.removeEventListener("resize", handleViewportChange);
+      window.removeEventListener("hashchange", handleViewportChange);
+    };
+
+    const show = () => {
+      if (disposed) return;
+      setShown(true);
+      setReady(true);
+      observer?.disconnect();
+      removeViewportListeners();
+      window.clearTimeout(fallbackId);
+    };
+
+    const markReady = () => {
+      if (!disposed) setReady(true);
+    };
+
     const prefersReduced =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
-    if (prefersReduced || typeof IntersectionObserver === "undefined") {
-      setShown(true);
+    const el = ref.current;
+    if (!el || prefersReduced || typeof IntersectionObserver === "undefined") {
+      show();
       return;
     }
 
-    const el = ref.current;
-    if (!el) return;
+    const revealIfVisible = () => {
+      const rect = el.getBoundingClientRect();
+      const viewportMargin = Math.max(window.innerHeight * 0.2, 160);
+      const hasVisiblePixels =
+        rect.bottom > -viewportMargin && rect.top < window.innerHeight + viewportMargin;
 
-    const observer = new IntersectionObserver(
+      if (hasVisiblePixels) {
+        show();
+        return true;
+      }
+
+      return false;
+    };
+
+    handleViewportChange = () => {
+      if (!revealIfVisible()) return;
+    };
+
+    observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setShown(true);
-            observer.disconnect();
+            show();
           }
         });
       },
-      { threshold: 0.08, rootMargin: "0px 0px -8% 0px" },
+      { threshold: 0, rootMargin: "20% 0px 20% 0px" },
     );
 
     observer.observe(el);
-    return () => observer.disconnect();
+    if (!revealIfVisible()) markReady();
+    frameId = window.requestAnimationFrame(() => {
+      if (!revealIfVisible()) markReady();
+    });
+    fallbackId = window.setTimeout(show, 1600);
+    window.addEventListener("scroll", handleViewportChange, { passive: true });
+    window.addEventListener("resize", handleViewportChange, { passive: true });
+    window.addEventListener("hashchange", handleViewportChange, { passive: true });
+
+    return () => {
+      disposed = true;
+      observer.disconnect();
+      window.cancelAnimationFrame(frameId);
+      window.clearTimeout(fallbackId);
+      removeViewportListeners();
+    };
   }, []);
 
-  return { ref, shown };
+  return { ref, shown, ready };
 }
 
 type RevealProps = HTMLAttributes<HTMLDivElement> & {
@@ -69,13 +125,14 @@ export function Reveal({
   style,
   ...rest
 }: RevealProps) {
-  const { ref, shown } = useReveal<HTMLDivElement>();
+  const { ref, shown, ready } = useReveal<HTMLDivElement>();
+  const visibilityClass = shown ? "is-visible" : ready ? "is-pending" : "";
 
   return (
     <div
       ref={ref}
       data-reveal
-      className={`${shown ? "is-visible" : ""}${className ? ` ${className}` : ""}`}
+      className={`${visibilityClass}${className ? ` ${className}` : ""}`}
       style={delay ? { ...style, transitionDelay: `${delay}ms` } : style}
       {...rest}
     >

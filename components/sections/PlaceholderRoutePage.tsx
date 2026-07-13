@@ -5,9 +5,11 @@ import { ArrowUpLeft, ArrowUpRight, MessageCircle, Phone } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { LanguageProvider, useLanguage } from "@/components/LanguageProvider";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { otherServicesHeroMediaPool } from "@/components/sections/unifiedHeroMedia";
 import { company } from "@/data/content";
 import type { SiteSection } from "@/data/sections";
 import { SectionShell } from "./SectionShell";
+import { UnifiedRouteHero } from "./UnifiedRouteHero";
 
 type PlaceholderRoutePageProps = {
   section: SiteSection;
@@ -49,7 +51,54 @@ function PlaceholderRoutePageBody({ section }: PlaceholderRoutePageProps) {
         </SectionShell>
       </header>
 
-      <main id="main-content" className="pb-16 pt-10 sm:pb-20 sm:pt-14">
+      <main id="main-content" className="pb-16 sm:pb-20">
+        <UnifiedRouteHero
+          id="other-services-hero"
+          variant="other-services"
+          eyebrow={t({ en: "Special requests and complementary details", ar: "حلول خاصة وتفاصيل مكملة" })}
+          title={t({
+            en: "Additional solutions\nthat complete the space",
+            ar: "حلول إضافية\nتكمل احتياج المساحة",
+          })}
+          body={t({
+            en: "TV units, custom details, and supportive elements prepared within the same Capital Oasis system when the project needs a more tailored direction.",
+            ar: "وحدات تلفزيون، تفاصيل خاصة، وعناصر مكملة تُجهز ضمن نفس منظومة كابيتال واسي عندما يحتاج المشروع إلى اتجاه أكثر تخصيصًا.",
+          })}
+          actions={
+            <>
+              <Link href="/" className="btn-primary">
+                <Arrow size={16} aria-hidden="true" />
+                {t({ en: "Back to homepage", ar: "العودة إلى الرئيسية" })}
+              </Link>
+              <Link
+                href="/#contact"
+                className="inline-flex min-h-[3.25rem] items-center justify-center gap-2 rounded-[var(--radius-button)] border border-[var(--color-border-subtle)] bg-white px-5 py-3 text-sm font-extrabold text-[var(--color-brand-deep)] transition hover:border-[var(--color-brand-gold)] hover:text-[var(--color-brand-deep-hover)]"
+              >
+                <MessageCircle size={16} aria-hidden="true" />
+                {t({ en: "Go to contact", ar: "الانتقال إلى التواصل" })}
+              </Link>
+              <a
+                href={company.phoneHref}
+                className="inline-flex min-h-[3.25rem] items-center justify-center gap-2 rounded-[var(--radius-button)] border border-[var(--color-border-subtle)] bg-transparent px-5 py-3 text-sm font-extrabold text-[var(--color-text-primary)] transition hover:border-[var(--color-brand-gold)] hover:bg-white/70"
+              >
+                <Phone size={16} aria-hidden="true" />
+                {t({ en: "Call us", ar: "اتصل بنا" })}
+              </a>
+            </>
+          }
+          points={
+            section.subcategories?.length
+              ? section.subcategories.slice(0, 3).map((subcategory) => subcategory.title)
+              : [
+                  { en: "Custom TV units", ar: "وحدات تلفزيون خاصة" },
+                  { en: "Integrated supplementary details", ar: "تفاصيل مكملة متكاملة" },
+                  { en: "Solutions shaped around the request", ar: "حلول تُفصل حسب الطلب" },
+                ]
+          }
+          mediaItems={otherServicesHeroMediaPool}
+        />
+
+        <div className="pt-10 sm:pt-14">
         <SectionShell className="grid gap-8">
           <section className="overflow-hidden rounded-[var(--radius-media)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-card)] shadow-[var(--shadow-card-soft)] backdrop-blur-md">
             <div className="grid lg:grid-cols-[1.08fr_0.92fr]">
@@ -152,6 +201,7 @@ function PlaceholderRoutePageBody({ section }: PlaceholderRoutePageProps) {
             </div>
           </section>
         </SectionShell>
+        </div>
       </main>
 
       <footer className="border-t border-[var(--color-border-subtle)] bg-white/55">

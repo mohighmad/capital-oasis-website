@@ -133,7 +133,7 @@ export const orderedSiteSections = [...siteSections].sort(
 
 export const primaryNavItems = [
   { href: "/", label: { ar: "الرئيسية", en: "Home" } },
-  ...orderedSiteSections.slice(0, 5).map((section) => ({
+  ...orderedSiteSections.map((section) => ({
     href: section.href,
     label: section.title,
   })),

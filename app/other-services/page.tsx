@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PlaceholderRoutePage } from "@/components/sections/PlaceholderRoutePage";
+import { OtherServicesRoutePage } from "@/components/sections/OtherServicesRoutePage";
 import { getSectionById } from "@/data/sections";
 
 const section = getSectionById("other-services");
@@ -9,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function OtherServicesPage() {
-  return <PlaceholderRoutePage section={section} />;
+  return <OtherServicesRoutePage />;
 }

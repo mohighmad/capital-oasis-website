@@ -29,6 +29,18 @@
   --space-hero-bottom: 72px;
   --space-modal: 24px;
   --radius-button: 999px;
+  /* Single source of truth for the hero top offset that clears the fixed header.
+     All route heroes pad-top by this value for a unified first-section rhythm. */
+  --site-header-height: 88px;
+  /* One shared page gutter for the whole site: used as the equal outer padding and
+     the center gap in both hero and non-hero split sections (single source of
+     truth → symmetrical gutters everywhere). */
+  --page-gutter: clamp(18px, 1.8vw, 32px);
+  --hero-gutter: var(--page-gutter);
+  --split-gutter: var(--page-gutter);
+  /* Route section vertical rhythm (one scale for every route page). */
+  --route-section-min: 56px;
+  --route-section-max: 84px;
   --deep-green: #0b3b35;
   --green-deep2: #093430;
   --forest-night: #06231f;
@@ -114,6 +126,45 @@
   background-image: var(--grad-coffee);
 }
 
+@keyframes hero-media-swap-in {
+  0% {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes hero-media-swap-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}
+
+.hero-media-swap-in {
+  animation: hero-media-swap-in 720ms var(--ease-premium) both;
+}
+
+.hero-media-swap-out {
+  animation: hero-media-swap-out 720ms var(--ease-premium) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-media-swap-in,
+  .hero-media-swap-out {
+    animation: none;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -196,6 +247,187 @@ a {
   margin-inline: auto;
 }
 
+.route-shell {
+  width: min(calc(100% - clamp(1.25rem, 4vw, 5rem)), 1480px);
+}
+
+.route-hero-copy {
+  width: 100%;
+  max-width: 38rem;
+}
+
+.route-hero-title {
+  max-width: 100%;
+  text-wrap: balance;
+  font-size: clamp(2.05rem, 5.2vw, 3.45rem);
+  line-height: 1.08;
+}
+
+.route-hero-body {
+  max-width: 34rem;
+  font-size: clamp(0.98rem, 1vw, 1.08rem);
+  line-height: 1.9;
+}
+
+.route-hero-actions {
+  margin-top: 1.5rem;
+}
+
+.route-hero-points {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.route-hero-media {
+  min-width: 0;
+}
+
+.global-hero-copy,
+.global-hero-media {
+  min-width: 0;
+}
+
+/* Mobile visual-first rhythm: hero media leads, then the copy panel. Desktop
+   placement is reset in the lg media query below so approved desktop layouts
+   and ratios stay unchanged. */
+.route-hero-media,
+.global-hero-media {
+  order: 1;
+}
+
+.route-hero-copy,
+.global-hero-copy {
+  order: 2;
+}
+
+.global-hero-title {
+  max-width: 100%;
+  text-wrap: balance;
+  font-size: clamp(2.15rem, 5vw, 3.55rem);
+  line-height: 1.08;
+}
+
+.global-hero-body {
+  max-width: 30rem;
+  font-size: clamp(0.98rem, 1vw, 1.08rem);
+  line-height: 1.8;
+}
+
+.global-hero-points {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 640px) {
+  .route-hero-points {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .global-hero-points {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .route-hero-shell {
+    width: min(calc(100% - clamp(1.5rem, 3vw, 4.25rem)), 1610px);
+    grid-template-columns: minmax(0, 0.74fr) minmax(18rem, 0.26fr);
+    align-items: center;
+    gap: clamp(1.5rem, 2.6vw, 3.75rem);
+  }
+
+  .route-hero-copy {
+    order: initial;
+    max-width: min(100%, 26rem);
+  }
+
+  .route-hero-media {
+    order: initial;
+  }
+
+  .route-hero-title {
+    font-size: clamp(2.3rem, 2.35vw, 3.8rem);
+  }
+
+  .route-hero-points {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .global-hero-shell {
+    /* Keep generous outer gutters, but tighten the inner media/text gap. */
+    width: min(100%, 1780px);
+    margin-inline: auto;
+    padding-inline: var(--hero-gutter);
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.02fr);
+    align-items: stretch;
+    gap: clamp(16px, 1.45vw, 22px);
+  }
+
+  .global-hero-copy {
+    /* Fill the whole text column (no narrow-card dead space); text lines stay
+       readable via inner max-widths on the title/body below. */
+    order: 1;
+    align-self: stretch;
+    max-width: none;
+  }
+
+  .global-hero-media {
+    order: 2;
+  }
+
+  .global-hero-title {
+    max-width: 16ch;
+    font-size: clamp(2.25rem, 2.35vw, 3.55rem);
+  }
+
+  .global-hero-body {
+    max-width: 32rem;
+    font-size: clamp(0.96rem, 0.94vw, 1.02rem);
+  }
+
+  .global-hero-points {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.65rem;
+  }
+}
+
+.route-density .section-pad {
+  padding-block: clamp(var(--route-section-min), 6.5vw, var(--route-section-max));
+}
+
+/* Compact route sections (tighter blocks like CTA/utility rows) share the same
+   rhythm scale but at ~70% so the whole site stays proportionally consistent. */
+.route-density .section-pad-compact {
+  padding-block: clamp(
+    calc(var(--route-section-min) * 0.72),
+    4.6vw,
+    calc(var(--route-section-max) * 0.72)
+  );
+}
+
+@media (max-width: 1023.98px) {
+  .split-row > :where(:has(img), :has(video)) {
+    order: 1;
+  }
+
+  .split-row > :where(:not(:has(img)):not(:has(video))) {
+    order: 2;
+  }
+}
+
+/* Non-hero image/text split sections: equal gutters on desktop.
+   Outer padding-inline == center gap == --split-gutter, so the row reads
+   [edge] x [text] x [media] x [edge]. Column ratios stay as authored per section
+   (text keeps its column; the media column absorbs the freed gap width).
+   Desktop only — below lg the section stacks via its base grid. */
+@media (min-width: 1024px) {
+  .split-row {
+    width: min(100%, 1480px);
+    margin-inline: auto;
+    padding-inline: var(--split-gutter);
+    gap: var(--split-gutter);
+  }
+}
+
 .section-pad {
   padding-block: clamp(
     var(--space-section-mobile),
@@ -271,6 +503,13 @@ html[dir="rtl"] h3 {
 
 html[dir="rtl"] p {
   line-height: 1.9;
+}
+
+/* Arabic hero headings breathe a little more than the tight English display
+   line-height (1.08 reads cramped in Arabic script). English stays tight. */
+html[dir="rtl"] .global-hero-title,
+html[dir="rtl"] .route-hero-title {
+  line-height: 1.22;
 }
 
 .brand-card {
@@ -391,12 +630,18 @@ html[dir="rtl"] p {
 
 /* Scroll reveal: gentle fade + small rise, transform-only */
 [data-reveal] {
-  opacity: 0;
-  transform: translateY(12px);
+  /* Visible by default: motion is progressive enhancement, never a gate. */
+  opacity: 1;
+  transform: none;
   transition:
     opacity var(--dur-reveal) var(--ease-premium),
     transform var(--dur-reveal) var(--ease-premium);
   will-change: opacity, transform;
+}
+
+[data-reveal].is-pending {
+  opacity: 0;
+  transform: translateY(12px);
 }
 
 [data-reveal].is-visible {
@@ -412,8 +657,12 @@ html[dir="rtl"] p {
 }
 
 [data-reveal].reveal-stagger > * {
-  opacity: 0;
+  opacity: 1;
   transition: opacity var(--dur-reveal) var(--ease-premium);
+}
+
+[data-reveal].reveal-stagger.is-pending > * {
+  opacity: 0;
 }
 
 [data-reveal].reveal-stagger.is-visible > * {
@@ -431,7 +680,7 @@ html[dir="rtl"] p {
 
 @media (max-width: 640px) {
   /* Lighter motion on mobile: smaller rise, shorter duration, tighter stagger */
-  [data-reveal] {
+  [data-reveal].is-pending {
     transform: translateY(7px);
     transition-duration: 480ms;
   }
@@ -525,6 +774,75 @@ html[dir="rtl"] p {
   animation: menu-in 220ms var(--ease-premium) both;
 }
 
+/* The Capital Oasis logo is the fixed visual reference for the desktop
+   header — it is never shifted to chase the nav. This class is kept as a
+   hook (in case a future logo swap needs a tiny nudge) but is neutral now;
+   see .header-controls-optical-align below, which moves the nav/actions to
+   the logo instead of the other way around. */
+.header-logo-align-fix {
+  transform: translateY(0);
+}
+
+/* Lowers the desktop nav links + language switch + WhatsApp button so their
+   shared centerline lands on the logo's own optical center — the seam
+   between the "CAPITAL" and "OASIS" word lines — rather than the header
+   bar's raw geometric center. Only active at the xl breakpoint, matching
+   where these controls become visible; disabled below that so the mobile
+   header is untouched.
+   Measured from the logo asset: with the image rendered at its xl height
+   (95px, after the 75%-of-current desktop header shrink), the CAPITAL/OASIS
+   seam sits ~15px below the image's own vertical center, so the nav/actions
+   row is lowered by that same amount.
+   IMPORTANT — this 15px offset is derived specifically for a 95px-tall
+   logo. It is NOT self-adjusting: if the header's xl logo height
+   (currently `xl:max-h-[95px]` on BrandLogo in Header.tsx) ever changes,
+   this value must be visually rechecked and recomputed against the new
+   logo height — do not assume it still lines up. The header-height
+   reduction (112px / xl:104px) applied alongside this comment does NOT
+   change the logo's own height, so no recompute was needed this round. */
+.header-controls-optical-align {
+  transform: translateY(0);
+}
+
+@media (min-width: 1280px) {
+  .header-controls-optical-align {
+    transform: translateY(15px);
+  }
+}
+
+/* Footer brand alignment system (Phoenixflow left / Capital Oasis right).
+   Both brand columns share three matching row "zones" — logo, credit/
+   description text, and action buttons — each given the same minimum
+   height with its content vertically centered inside. Because both
+   columns' zones share the same height band, row 1 always lines up with
+   row 1, row 2 with row 2, and row 3 with row 3, regardless of how many
+   lines of text either side actually renders.
+   This replaces the previous single `.footer-capital-oasis-align-down`
+   patch, which shifted the whole Capital Oasis column by one fixed
+   translateY(48px) value — that could only approximate alignment at one
+   point and drifted at the others whenever the two columns' content
+   lengths differed (e.g. Capital Oasis's longer description paragraph vs
+   Phoenixflow's shorter credit/support lines). That class and its rule
+   have been removed; do not reintroduce a whole-column translateY here
+   without removing these zone rules first, or the two systems will fight
+   each other.
+   Desktop-only (lg breakpoint, matching where the footer switches into
+   its side-by-side column layout); below that, the mobile/tablet stacked
+   footer keeps its natural flow and gap-based spacing, untouched. */
+@media (min-width: 1024px) {
+  .footer-brand-logo-zone {
+    min-height: 11.5rem; /* ~184px: fits the Capital Oasis logo (168px at sm+) and the Phoenixflow tile (~176px at sm+), each centered within */
+  }
+
+  .footer-brand-text-zone {
+    min-height: 8.5rem; /* ~136px: sized to the taller Capital Oasis description paragraph; Phoenixflow's shorter credit/support text centers within the same band */
+  }
+
+  .footer-brand-actions-zone {
+    min-height: 3rem; /* ~48px: fits both the 44px Capital Oasis buttons and the 40px Phoenixflow icon circles, centered within */
+  }
+}
+
 /* Slightly stronger elevation for featured imagery */
 .card-feature {
   box-shadow: 0 26px 70px rgba(6, 35, 31, 0.18);
@@ -561,9 +879,26 @@ html[dir="rtl"] p {
   pointer-events: none;
 }
 
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @media (max-width: 640px) {
   .shell {
     width: min(calc(100% - 2rem), 1240px);
+  }
+
+  .route-shell {
+    width: min(calc(100% - 1.25rem), 1480px);
+  }
+
+  .route-density .section-pad {
+    padding-block: clamp(52px, 14vw, 64px);
   }
 }
 
