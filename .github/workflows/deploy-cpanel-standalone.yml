@@ -1,0 +1,168 @@
+name: Deploy standalone app to cPanel
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cpanel-standalone-deploy
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
+      CPANEL_PORT: ${{ secrets.CPANEL_PORT }}
+      CPANEL_USER: ${{ secrets.CPANEL_USER }}
+      CPANEL_APP_PATH: ${{ secrets.CPANEL_APP_PATH }}
+      CPANEL_PUBLIC_HTML: ${{ secrets.CPANEL_PUBLIC_HTML }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build with webpack
+        run: npm run build
+
+      - name: Prepare standalone deployment folder
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          rm -rf deploy-out
+          mkdir -p deploy-out/.next deploy-out/public
+
+          cp -a .next/standalone/. deploy-out/
+          cp -a .next/static deploy-out/.next/static
+          cp -a public/. deploy-out/public/
+
+          test -f deploy-out/server.js
+          test -f deploy-out/package.json
+          test -d deploy-out/.next/static
+          test -d deploy-out/public/images
+          test -d deploy-out/node_modules
+
+          echo "Standalone deployment folder is ready."
+
+      - name: Validate deployment secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          for required_name in \
+            CPANEL_HOST \
+            CPANEL_PORT \
+            CPANEL_USER \
+            CPANEL_APP_PATH \
+            CPANEL_PUBLIC_HTML; do
+            if [[ -z "${!required_name:-}" ]]; then
+              echo "::error::Missing required secret: ${required_name}"
+              exit 1
+            fi
+          done
+
+      - name: Configure SSH key
+        shell: bash
+        env:
+          CPANEL_SSH_KEY: ${{ secrets.CPANEL_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${CPANEL_SSH_KEY:-}" ]]; then
+            echo "::error::Missing required secret: CPANEL_SSH_KEY"
+            exit 1
+          fi
+
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$CPANEL_SSH_KEY" > ~/.ssh/cpanel_deploy_key
+          chmod 600 ~/.ssh/cpanel_deploy_key
+          ssh-keygen -y -f ~/.ssh/cpanel_deploy_key > /dev/null
+
+      - name: Verify existing cPanel app root
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh_options=(
+            -p "$CPANEL_PORT"
+            -i ~/.ssh/cpanel_deploy_key
+            -o IdentitiesOnly=yes
+            -o StrictHostKeyChecking=accept-new
+          )
+
+          printf -v verify_command 'test -d %q && test -d %q' "$CPANEL_APP_PATH" "$CPANEL_PUBLIC_HTML"
+          ssh "${ssh_options[@]}" "${CPANEL_USER}@${CPANEL_HOST}" "$verify_command"
+
+      - name: Upload standalone runtime contents
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh_options=(
+            -p "$CPANEL_PORT"
+            -i ~/.ssh/cpanel_deploy_key
+            -o IdentitiesOnly=yes
+            -o StrictHostKeyChecking=accept-new
+          )
+          rsync -az --delete \
+            --exclude='tmp/' \
+            --exclude='stderr.log' \
+            --exclude='*.log' \
+            -e "ssh ${ssh_options[*]}" \
+            deploy-out/ \
+            "${CPANEL_USER}@${CPANEL_HOST}:${CPANEL_APP_PATH}/"
+
+      - name: Link public assets and restart the app
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh_options=(
+            -p "$CPANEL_PORT"
+            -i ~/.ssh/cpanel_deploy_key
+            -o IdentitiesOnly=yes
+            -o StrictHostKeyChecking=accept-new
+          )
+
+          printf -v remote_command 'CPANEL_APP_PATH=%q CPANEL_PUBLIC_HTML=%q bash -s' "$CPANEL_APP_PATH" "$CPANEL_PUBLIC_HTML"
+          ssh "${ssh_options[@]}" "${CPANEL_USER}@${CPANEL_HOST}" "$remote_command" <<'REMOTE_SCRIPT'
+          set -euo pipefail
+
+          app_root="${CPANEL_APP_PATH:?}"
+          public_html="${CPANEL_PUBLIC_HTML:?}"
+          static_source="${app_root}/.next/static"
+          images_source="${app_root}/public/images"
+          static_target="${public_html}/_next/static"
+          images_target="${public_html}/images"
+          backup_stamp="$(date +%Y%m%d%H%M%S)-$$"
+
+          test -d "$static_source"
+          test -d "$images_source"
+
+          backup_existing_path() {
+            local target="$1"
+            if [ -L "$target" ]; then
+              rm "$target"
+            elif [ -e "$target" ]; then
+              mv "$target" "${target}.backup-${backup_stamp}"
+            fi
+          }
+
+          mkdir -p "${public_html}/_next"
+
+          backup_existing_path "$static_target"
+          ln -s "$static_source" "$static_target"
+
+          backup_existing_path "$images_target"
+          ln -s "$images_source" "$images_target"
+
+          mkdir -p "${app_root}/tmp"
+          touch "${app_root}/tmp/restart.txt"
+          REMOTE_SCRIPT

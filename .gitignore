@@ -19,6 +19,9 @@
 # deploy/platform
 /.vercel/
 /.netlify/
+/deployment/
+*.zip
+*.tar.gz
 
 # env / local config
 .env
@@ -47,6 +50,7 @@ Thumbs.db
 next-env.d.ts
 
 # local generated reports / render temp
+/reports/
 /reports/final-videos/temp/
 /reports/final-videos/reports/
 /reports/final-videos/outputs-v5/
@@ -54,3 +58,13 @@ next-env.d.ts
 /freeze-fix-backup-*/
 /freeze-diagnostics-*.json
 /safe-fix-results-*.json
+
+# heavy local-only source material
+/MUSIC/
+/LOGO/
+/PHOENIXFLOW LOGO/
+/data and videos to be added after arranging/
+/New organised data/
+/website photos/
+/Log/
+/tmp/
